@@ -36,11 +36,19 @@
   let breakSeconds = ref<number>(0);
   let focusTimer: any;
   let breakTimer: any;
+  let longBreakTimer: any;
+  let totalFocusSession = ref<number>(0)
+  let sessionCount = ref<number>(0)
+  let longBreakMinutes = ref<number>(0)
+  let longBreakSeconds = ref<number>(0)
   
   const startFocusSession = () => {
     commandText.value = CommandText.focus;
     focusTimer = setInterval(() => {
-      if (focusSeconds.value !== 59) focusSeconds.value++;
+      if (focusSeconds.value !== 59) {
+        focusSeconds.value++;
+        totalFocusSession.value++
+    }
       else {
         focusSeconds.value = 0;
         focusMinutes.value++;
@@ -53,6 +61,7 @@
     clearInterval(focusTimer);
     clearInterval(breakTimer);
     isTimerActive.value = false;
+    sessionCount.value++
     if (commandText.value === CommandText.focus) {
       commandText.value = CommandText.break;
       breakMinutes.value = Math.floor(focusMinutes.value / 5);
@@ -68,7 +77,9 @@
   };
   
   const startBreakSession = () => {
-    breakTimer = setInterval(() => {
+    if(sessionCount.value === 3) startLongBreakSession()
+    else{
+        breakTimer = setInterval(() => {
       if (breakSeconds.value > 0) {
         breakSeconds.value--;
       } else if (breakMinutes.value > 0) {
@@ -79,7 +90,25 @@
         startFocusSession();
       }
     }, 1000);
+    }
   };
+  const startLongBreakSession = ()=>{
+    sessionCount.value = 0;
+    longBreakMinutes.value = Math.round(totalFocusSession.value/60)
+    longBreakTimer = setInterval(()=>{
+        if(longBreakSeconds.value > 0 ){
+            longBreakSeconds.value--
+        }
+        else if(longBreakMinutes.value > 0){
+            longBreakMinutes.value--
+            longBreakSeconds.value = 59
+        }
+        else{
+            clearInterval(longBreakTimer)
+            startFocusSession()
+        }
+    }, 1000)
+  }
   </script>
   
   <style scoped>
