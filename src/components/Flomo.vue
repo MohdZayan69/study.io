@@ -3,7 +3,8 @@ import { ref } from "vue";
 enum CommandText {
   start = "Start",
   pause = "Pause",
-  stop = "Stop"
+  stop = "Stop",
+  resume = "Resume"
 }
 let commandText = ref(CommandText.start);
 let isTimerActive = ref<boolean>(true);
@@ -12,17 +13,19 @@ let focusSeconds = ref<number>(0);
 let breakMinutes = ref<number>(0);
 let breakSeconds = ref<number>(0)
 let focusTimer: any;
+let breakTimer:any;
 const handleCommand = () => {
     if(commandText.value === CommandText.start) startFocusTimer()
     else if(commandText.value === CommandText.pause) pauseBreakTimer()
     else if (commandText.value === CommandText.stop) stopFocusTimer()
+    else if(commandText.value === CommandText.resume) resumeBreakTimer()
     if(commandText.value == CommandText.start) isTimerActive.value = true
     else if(commandText.value == CommandText.pause || commandText.value == CommandText.stop) isTimerActive.value = false
 };
 function startFocusTimer(){
     commandText.value = CommandText.stop
     focusTimer = setInterval(()=>{
-        if(focusSeconds.value !== 59) focusSeconds.value++
+        if(focusSeconds.value !== 1) focusSeconds.value++
         else{
             focusSeconds.value = 0
             focusMinutes.value++
@@ -30,12 +33,33 @@ function startFocusTimer(){
     }, 1000)
 }
 function pauseBreakTimer(){
-    commandText.value = CommandText.start
-    clearInterval(focusTimer)
+    commandText.value = CommandText.resume
+    clearInterval(breakTimer)
+}
+function resumeBreakTimer(){
+    commandText.value = CommandText.pause
+    breakTimer = setInterval(()=>{
+        if(breakSeconds.value !== 0) breakSeconds.value--
+        else if (breakSeconds.value == 0 && breakMinutes.value !== 0) {
+            breakMinutes.value--
+            breakSeconds.value = 59
+        }
+        else if(breakMinutes.value ==0 && breakSeconds.value == 0) startFocusTimer()
+    }, 1000)
 }
 function startBreakTimer(){
     breakMinutes.value = Math.floor(focusMinutes.value/5)
     breakSeconds.value = Math.floor(focusSeconds.value/5)
+    focusMinutes.value = 0
+    focusSeconds.value = 0
+    breakTimer = setInterval(()=>{
+        if(breakSeconds.value !== 0) breakSeconds.value--
+        else if (breakSeconds.value == 0 && breakMinutes.value !== 0) {
+            breakMinutes.value--
+            breakSeconds.value = 59
+        }
+        else if(breakMinutes.value ==0 && breakSeconds.value == 0) startFocusTimer()
+    }, 1000)
 }
 function stopFocusTimer(){
     commandText.value = CommandText.pause
@@ -46,7 +70,7 @@ function stopFocusTimer(){
 <template>
   <div class="transparent flowmo">
     <h2>Title</h2>
-    <h1>{{ commandText === CommandText.stop? `${focusMinutes}:${focusSeconds}`:commandText === CommandText.pause? `${breakMinutes}:${breakSeconds}`: "00:00" }}</h1>
+    <h1>{{ commandText === CommandText.stop? `${focusMinutes}:${focusSeconds}`:commandText === CommandText.pause || commandText == CommandText.resume? `${breakMinutes}:${breakSeconds}`: "00:00" }}</h1>
     <div class="btn-con">
       <button @click="handleCommand">{{ commandText }}</button>
       <button :disabled="isTimerActive">Reset</button>
