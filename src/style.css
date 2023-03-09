@@ -1,9 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
 :root{
-  --border-radius: 10px
+  --border-radius: 10px;
+  --base-font-size:16px;
+  --black: #222
 }
 *{
   overflow: hidden;
   transition: .5s;
+  margin: 0;
+  padding: 0;
+  font-family: 'Space Mono', monospace;
+  color:var(--black)
+}
+h1, h2, h3,h4{
+  font-weight: 500;
+}
+h1{
+  font-size: calc(var(--base-font-size)*2.5);
+}
+h2{
+  font-weight: 700;
 }
 .homepage{
   display: flex;
@@ -42,4 +58,23 @@
   width: 250px;
   height: 300px;
   display: block;
+}
+button{
+  padding: 4px 8px;
+  font-weight: 700;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #222;
+  color:#fff;
+  opacity: .7;
+  font-size: calc(var(--base-font-size)*.9);
+}
+button:hover{
+  opacity: 1;
+}
+button:disabled{
+  background-color:ghostwhite;
+  color:grey;
+  opacity: 1;
 }
