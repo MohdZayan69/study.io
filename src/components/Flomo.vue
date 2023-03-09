@@ -1,10 +1,29 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+enum CommandText{
+    start = "Start",
+    pause = "Pause",
+}
+let commandText = ref(CommandText.start)
+let isTimerActive = ref(true)
+const handleCommand = ()=>{
+    if(commandText.value === CommandText.start) {
+        commandText.value = CommandText.pause
+        isTimerActive.value = false
+    }
+    else if(commandText.value === CommandText.pause) {
+        commandText.value = CommandText.start
+        isTimerActive.value = true
+    }
+}
+</script>
 <template>
     <div class="transparent flowmo">
         <h2>Title</h2>
         <h1>00:00</h1>
         <div class="btn-con">
-            <button>Start</button>
-            <button disabled>Reset</button>
+            <button @click="handleCommand">{{ commandText }}</button>
+            <button :disabled="isTimerActive">Reset</button>
         </div>
     </div>
 </template>
