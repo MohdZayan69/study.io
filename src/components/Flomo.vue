@@ -9,19 +9,19 @@ let commandText = ref(CommandText.start);
 let isTimerActive = ref<boolean>(true);
 let focusMinutes = ref<number>(0);
 const handleCommand = () => {
-    if(commandText.value === CommandText.start) startTimer()
-    else if(commandText.value === CommandText.pause) pauseTimer()
-    else if (commandText.value === CommandText.stop) stopTimer()
+    if(commandText.value === CommandText.start) startFocusTimer()
+    else if(commandText.value === CommandText.pause) pauseBreakTimer()
+    else if (commandText.value === CommandText.stop) stopFocusTimer()
     if(commandText.value == CommandText.start) isTimerActive.value = true
     else if(commandText.value == CommandText.pause || commandText.value == CommandText.stop) isTimerActive.value = false
 };
-function startTimer(){
+function startFocusTimer(){
     commandText.value = CommandText.stop
 }
-function pauseTimer(){
+function pauseBreakTimer(){
     commandText.value = CommandText.start
 }
-function stopTimer(){
+function stopFocusTimer(){
     commandText.value = CommandText.pause
 }
 </script>
