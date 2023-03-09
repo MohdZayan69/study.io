@@ -5,6 +5,13 @@
   overflow: hidden;
   transition: .5s;
 }
+.homepage{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
 .bgVideo{
   width: 100%;
   height: 100vh;
@@ -30,4 +37,9 @@
   width: 250px;
   height: 40px;
   transform: translate(0, 50%);
+}
+.flowmo{
+  width: 250px;
+  height: 300px;
+  display: block;
 }
