@@ -3,16 +3,27 @@ import { ref } from "vue";
 enum CommandText {
   start = "Start",
   pause = "Pause",
+  stop = "Stop"
 }
 let commandText = ref(CommandText.start);
 let isTimerActive = ref<boolean>(true);
 let focusMinutes = ref<number>(0);
 const handleCommand = () => {
-    if(commandText.value !== CommandText.start) commandText.value = CommandText.start
-    else if(commandText.value !== CommandText.pause) commandText.value = CommandText.pause
+    if(commandText.value === CommandText.start) startTimer()
+    else if(commandText.value === CommandText.pause) pauseTimer()
+    else if (commandText.value === CommandText.stop) stopTimer()
     if(commandText.value == CommandText.start) isTimerActive.value = true
-    else if(commandText.value == CommandText.pause) isTimerActive.value = false
+    else if(commandText.value == CommandText.pause || commandText.value == CommandText.stop) isTimerActive.value = false
 };
+function startTimer(){
+    commandText.value = CommandText.stop
+}
+function pauseTimer(){
+    commandText.value = CommandText.start
+}
+function stopTimer(){
+    commandText.value = CommandText.pause
+}
 </script>
 <template>
   <div class="transparent flowmo">
