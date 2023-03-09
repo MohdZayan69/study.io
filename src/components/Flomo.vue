@@ -8,6 +8,10 @@ enum CommandText {
 let commandText = ref(CommandText.start);
 let isTimerActive = ref<boolean>(true);
 let focusMinutes = ref<number>(0);
+let focusSeconds = ref<number>(0);
+let breakMinutes = ref<number>(0);
+let breakSeconds = ref<number>(0)
+let focusTimer: any;
 const handleCommand = () => {
     if(commandText.value === CommandText.start) startFocusTimer()
     else if(commandText.value === CommandText.pause) pauseBreakTimer()
@@ -17,18 +21,32 @@ const handleCommand = () => {
 };
 function startFocusTimer(){
     commandText.value = CommandText.stop
+    focusTimer = setInterval(()=>{
+        if(focusSeconds.value !== 59) focusSeconds.value++
+        else{
+            focusSeconds.value = 0
+            focusMinutes.value++
+        }
+    }, 1000)
 }
 function pauseBreakTimer(){
     commandText.value = CommandText.start
+    clearInterval(focusTimer)
+}
+function startBreakTimer(){
+    breakMinutes.value = Math.floor(focusMinutes.value/5)
+    breakSeconds.value = Math.floor(focusSeconds.value/5)
 }
 function stopFocusTimer(){
     commandText.value = CommandText.pause
+    console.log(focusMinutes.value, focusSeconds.value)
+    startBreakTimer()
 }
 </script>
 <template>
   <div class="transparent flowmo">
     <h2>Title</h2>
-    <h1>00:00</h1>
+    <h1>{{ commandText === CommandText.stop? `${focusMinutes}:${focusSeconds}`:commandText === CommandText.pause? `${breakMinutes}:${breakSeconds}`: "00:00" }}</h1>
     <div class="btn-con">
       <button @click="handleCommand">{{ commandText }}</button>
       <button :disabled="isTimerActive">Reset</button>
