@@ -5,12 +5,12 @@
 </template>
 <style scoped>
 .container{
-    width: 250px;
-    height: 40px;
+    width: 48px;
+    height: 250px;
     position: absolute;
-    bottom: 0;
-    left:50%;
-    transform: translate(-50%, 0%);
+    top: 50%;
+    left:0%;
+    transform: translate(0%, -50%);
 }
 .container:hover > .taskBar{
     transform: translate(0%, 0);
